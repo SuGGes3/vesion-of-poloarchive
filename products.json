@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Polo Sport Rugby '93",
+    "meta": "Made in USA",
+    "price": "€85",
+    "priceNum": 85,
+    "color": "multi",
+    "size": "L",
+    "images": ["img/1img/1.jpg","img/1img/2.jpg","img/1img/3.jpg","img/1img/4.jpg","img/1img/5.jpg","img/1img/6.jpg"],
+    "sold": false,
+    "badge": "Grail",
+    "desc": "Heavyweight rugby from the golden Polo Sport era. Made in USA, thick cotton, contrast collar. Honest wear that only adds character."
+  },
+  {
+    "title": "Polo RL Navy Classic",
+    "meta": "90s",
+    "price": "€45",
+    "priceNum": 45,
+    "color": "navy",
+    "size": "M",
+    "images": ["img/2img/1.jpg","img/2img/2.jpg","img/2img/3.jpg","img/2img/4.jpg","img/2img/5.jpg","img/2img/6.jpg"],
+    "sold": false,
+    "badge": "",
+    "desc": "The staple. 90s navy classic-fit polo, embroidered pony, zero flaws. The one you wear every week."
+  },
+  {
+    "title": "Polo Country Chambray",
+    "meta": "Rare tag",
+    "price": "€120",
+    "priceNum": 120,
+    "color": "blue",
+    "size": "XL",
+    "images": ["img/3img/1.jpg","img/3img/2.jpg","img/3img/3.jpg","img/3img/4.jpg","img/3img/5.jpg","img/3img/6.jpg"],
+    "sold": false,
+    "badge": "Rare",
+    "desc": "Polo Country — short-lived line, heavily hunted. Chambray fade is even, tag is intact. Collector piece."
+  },
+  {
+    "title": "Polo Bear Knit",
+    "meta": "Knitted bear",
+    "price": "€240",
+    "priceNum": 240,
+    "color": "navy",
+    "size": "L",
+    "images": [],
+    "sold": false,
+    "badge": "Ultra",
+    "desc": "The grail. Knitted-in bear, not printed. Heavy cotton knit, deep navy. These don't come back."
+  },
+  {
+    "title": "RL '67 Faded Red",
+    "meta": "Perfect fade",
+    "price": "€55",
+    "priceNum": 55,
+    "color": "red",
+    "size": "M",
+    "images": [],
+    "sold": false,
+    "badge": "",
+    "desc": "Sun-faded red that looks intentional. Soft collar, broken-in feel. Vintage done right."
+  },
+  {
+    "title": "Polo Sport USA Flag",
+    "meta": "Flag chest hit",
+    "price": "€95",
+    "priceNum": 95,
+    "color": "white",
+    "size": "L",
+    "images": [],
+    "sold": true,
+    "badge": "",
+    "desc": "Flag chest hit in clean white. Iconic 90s Polo Sport energy. Gone — back on the road."
+  }
+]
