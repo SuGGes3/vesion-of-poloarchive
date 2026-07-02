@@ -233,6 +233,17 @@ section{position:relative;z-index:2;padding:100px 28px;max-width:1240px;margin:0
 }
 .buy:hover{background:var(--orange)}
 .buy.sold{background:transparent;color:rgba(236,226,208,.4);border:1px solid rgba(236,226,208,.2);cursor:default}
+/* квадратная мини-кнопка «в корзину» рядом с Buy now */
+.card-actions{display:flex;gap:8px;align-items:stretch}
+.add-sq{
+  width:36px;height:36px;flex:none;padding:0;
+  background:transparent;color:var(--cream);
+  border:1px solid rgba(236,226,208,.4);
+  cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
+  transition:border-color .2s,color .2s,background .2s;
+}
+.add-sq:hover{border-color:var(--orange);color:var(--orange)}
+.add-sq svg{width:16px;height:16px;display:block}
 .empty{
   grid-column:1/-1;text-align:center;padding:60px 0;
   font-family:var(--display);font-size:15px;letter-spacing:.1em;opacity:.4;
@@ -629,7 +640,12 @@ function renderGrid(){
           <span class="price">${p.price}</span>
           ${p.sold
             ? `<button class="buy sold" disabled>Sold</button>`
-            : `<button class="buy" data-add="${i}">Add to cart</button>`}
+            : `<div class="card-actions">
+                 <button class="add-sq" data-add="${i}" aria-label="Add to cart" title="Add to cart">
+                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1.5"/><circle cx="19" cy="21" r="1.5"/><path d="M2 3h3l2.6 12.5a2 2 0 0 0 2 1.5h8.7a2 2 0 0 0 2-1.6L22 7H6"/></svg>
+                 </button>
+                 <button class="buy" data-buy="${i}">Buy now</button>
+               </div>`}
         </div>
       </div>
     </article>`;
@@ -771,6 +787,7 @@ function addToCart(i){
    одной вещи, и для бандла.
 ============================================================ */
 async function goCheckout(indices, btn){
+  const orig = btn ? btn.textContent : '';
   try{
     if (btn){ btn.disabled = true; btn.textContent = 'Loading…'; }
     const r = await fetch('/.netlify/functions/create-checkout', {
@@ -784,7 +801,7 @@ async function goCheckout(indices, btn){
   }catch(err){
     console.error(err);
     alert('Checkout is temporarily unavailable. Please try again in a minute.');
-    if (btn){ btn.disabled = false; btn.textContent = 'Checkout'; }
+    if (btn){ btn.disabled = false; btn.textContent = orig; }
   }
 }
 function checkout(){
