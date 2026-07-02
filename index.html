@@ -64,7 +64,26 @@ nav.scrolled{
 .nav-links{display:flex;gap:24px;align-items:center;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
 .nav-links a{opacity:.85;transition:opacity .2s,color .2s}
 .nav-links a:hover{opacity:1;color:var(--orange)}
-@media(max-width:640px){.nav-links{gap:14px;font-size:10px}}
+@media(max-width:640px){.nav-links{gap:10px;font-size:9px}}
+
+/* ============ MOBILE TUNING ============ */
+@media(max-width:640px){
+  nav{padding:12px 14px}
+  .logo{font-size:13px}
+  .cart-btn{padding:6px 10px;font-size:9px;gap:5px}
+  .cart-btn b{min-width:15px;height:15px;font-size:9px}
+  .hero-meta{font-size:8px;letter-spacing:.14em;line-height:1.6}
+  .hero-meta.tl{top:54px;left:14px}
+  .hero-meta.tr{top:54px;right:14px}
+  .hero-titles{top:20%}
+  .hero-titles h1{font-size:clamp(52px,17vw,90px)}
+  .found-row{left:14px;right:14px;font-size:9px;letter-spacing:.18em;top:calc(20% + 38vw)}
+  .swipe-hint{font-size:10px;letter-spacing:.14em;bottom:24px}
+  .skip{bottom:18px;right:14px;padding:8px 12px}
+  .plus{display:none}
+  section{padding:70px 16px}
+  .marquee-track{font-size:12px}
+}
 
 /* ============================================================
    HERO — poster layout over the video.
@@ -863,6 +882,15 @@ if (VIDEO_A && VIDEO_B && !reduced){
   vidB.addEventListener('canplay', ()=>{ bOK = true; }, {once:true});
   vidA.addEventListener('error', ()=>{ aOK = false; finishAll(); }, {once:true});
   vidB.addEventListener('error', ()=>{ bOK = false; }, {once:true});
+  /* iOS/Android: первое касание «разблокирует» оба видео,
+     дальше play() из кода работает без ограничений */
+  const unlockVideos = ()=>{
+    if (phase !== 'idle') return;
+    [vidA, vidB].forEach(v=>{
+      v.play().then(()=>{ v.pause(); v.currentTime = 0; }).catch(()=>{});
+    });
+  };
+  addEventListener('touchstart', unlockVideos, {once:true, passive:true});
 } else {
   phase = 'done';
 }
@@ -872,7 +900,21 @@ function unlock(){ document.body.classList.remove('locked'); }
 
 function startFilm1(){
   if (phase!=='idle') return;
-  if (!aOK){ finishAll(); return; }
+  if (!aOK){
+    /* видео ещё грузится (мобильный интернет): ждём до 7с и стартуем */
+    phase = 'film1';
+    hero.classList.add('playing');
+    lock();
+    scrollTo({top:0});
+    let started = false;
+    const go = ()=>{ if (started || phase!=='film1') return; started = true;
+      vidA.play().catch(()=>finishAll());
+      setTimeout(()=>{ if(phase==='film1') toAwait(); }, ((vidA.duration||8)+3)*1000);
+    };
+    vidA.addEventListener('canplay', go, {once:true});
+    setTimeout(()=>{ if(!started && phase==='film1') finishAll(); }, 7000);
+    return;
+  }
   phase = 'film1';
   hero.classList.add('playing');
   lock();
