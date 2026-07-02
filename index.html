@@ -61,7 +61,7 @@ nav.scrolled{
 }
 .logo{font-family:var(--display);font-size:16px;letter-spacing:.04em;color:var(--cream)}
 .logo span{color:var(--orange)}
-.nav-links{display:flex;gap:24px;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+.nav-links{display:flex;gap:24px;align-items:center;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
 .nav-links a{opacity:.85;transition:opacity .2s,color .2s}
 .nav-links a:hover{opacity:1;color:var(--orange)}
 @media(max-width:640px){.nav-links{gap:14px;font-size:10px}}
@@ -722,7 +722,10 @@ function openProduct(i){
 }
 function closeProduct(){
   pmodal.classList.remove('open');
-  if (phase === 'done' || typeof phase === 'undefined') document.body.classList.remove('locked');
+  /* снимаем блок всегда, кроме активной фазы фильма в hero */
+  if (typeof phase === 'undefined' || (phase !== 'film1' && phase !== 'film2' && phase !== 'await')){
+    document.body.classList.remove('locked');
+  }
 }
 document.getElementById('pmodalClose').addEventListener('click', closeProduct);
 pmodal.addEventListener('click', e=>{ if (e.target === pmodal) closeProduct(); });
