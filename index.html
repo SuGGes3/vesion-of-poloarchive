@@ -200,7 +200,6 @@ section{position:relative;z-index:2;padding:100px 28px;max-width:1240px;margin:0
 /* ============================================================
    CATALOG + FILTERS
 ============================================================ */
-.filters{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start;margin-bottom:32px}
 .fgroup{display:flex;flex-direction:column;gap:8px}
 .fgroup .flabel{font-size:10px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;opacity:.55}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
@@ -443,13 +442,44 @@ footer .logo{font-size:22px;margin-bottom:14px;display:block}
 }
 .drawer-veil.open{opacity:1;pointer-events:auto}
 
-/* промо-полоса над каталогом */
+/* тонкая bundle-строка вместо кричащей плашки */
 .promo-strip{
-  display:inline-block;
+  display:inline-flex;align-items:center;gap:10px;
+  border:1px solid rgba(240,149,28,.5);
+  color:var(--orange);
+  font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  padding:9px 14px;margin-bottom:24px;
+}
+.promo-strip::before{content:'';width:6px;height:6px;background:var(--orange)}
+
+/* кнопка Filters + выпадающая панель */
+.filters-bar{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.filters-toggle{
+  display:inline-flex;align-items:center;gap:8px;
+  background:transparent;color:var(--cream);
+  border:1px solid rgba(236,226,208,.35);
+  font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  padding:10px 16px;cursor:pointer;
+  transition:border-color .2s,color .2s;
+}
+.filters-toggle:hover{border-color:var(--orange);color:var(--orange)}
+.filters-toggle svg{width:14px;height:14px}
+.filters-toggle b{
   background:var(--orange);color:var(--teal-deep);
-  font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
-  padding:8px 14px;margin-bottom:28px;
-  transform:rotate(-1deg);
+  font-size:9px;min-width:16px;height:16px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;
+}
+.filters{
+  display:none;
+  flex-wrap:wrap;gap:20px;align-items:flex-start;
+  margin-bottom:28px;padding:18px;
+  background:var(--teal);
+  border:1px solid rgba(236,226,208,.12);
+}
+.filters.open{display:flex}
+@media(max-width:640px){
+  .filters{flex-direction:column;gap:16px;padding:14px}
+  .fgroup{width:100%}
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -491,8 +521,7 @@ footer .logo{font-size:22px;margin-bottom:14px;display:block}
 
 <!-- ============ HERO: swipe = play the film, page locks ============ -->
 <header class="hero" id="hero">
-  <video id="vidA" muted playsinline preload="auto"
-         poster="https://d8j0ntlcm91z4.cloudfront.net/user_39Qm9RIiWlW327BCfS0sc0QcpGU/hf_20260702_174213_2a0800cc-8808-4b35-b333-630ae905e85e.png"></video>
+  <video id="vidA" muted playsinline preload="auto" poster="img/hero.jpg"></video>
   <video id="vidB" muted playsinline preload="auto" style="opacity:0"></video>
   <div class="duo"></div>
 
@@ -527,9 +556,15 @@ footer .logo{font-size:22px;margin-bottom:14px;display:block}
 <section id="catalog">
   <p class="section-label reveal">Catalog · Drop 001</p>
   <h2 class="section-title reveal">FRESH FROM <span class="alt">THE TRUNK</span></h2>
-  <div class="promo-strip reveal">Bundle deal: 2 pieces −10% · 3+ pieces −20%</div>
+  <div class="promo-strip reveal">Bundle: 2 pieces −10% · 3+ −20%</div>
 
-  <div class="filters reveal">
+  <div class="filters-bar reveal">
+    <button class="filters-toggle" id="filtersToggle">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+      Filters <b id="filtersCount" style="display:none">0</b>
+    </button>
+  </div>
+  <div class="filters" id="filtersPanel">
     <div class="fgroup">
       <span class="flabel">Color</span>
       <div class="chips" id="fColor"></div>
@@ -674,8 +709,19 @@ document.querySelector('.filters').addEventListener('click',e=>{
   const b=e.target.closest('.chip');
   if(!b) return;
   state[b.dataset.g]=b.dataset.v;
-  renderFilters();renderGrid();
+  renderFilters();renderGrid();updateFiltersCount();
 });
+/* кнопка Filters: показать/спрятать панель + счётчик активных */
+const filtersPanel = document.getElementById('filtersPanel');
+document.getElementById('filtersToggle').addEventListener('click', ()=>{
+  filtersPanel.classList.toggle('open');
+});
+function updateFiltersCount(){
+  const n = ['color','size','price'].filter(k=>state[k]!=='all').length + (state.sort!=='feat'?1:0);
+  const badge = document.getElementById('filtersCount');
+  badge.style.display = n ? 'inline-flex' : 'none';
+  badge.textContent = n;
+}
 
 /* ============================================================
    PRODUCT PAGE (модалка): клик по фото или названию карточки
@@ -861,8 +907,8 @@ mq.innerHTML+=mq.innerHTML;
    Page is locked from the first swipe until film2 ends.
    Safety: if either video can't play, the page NEVER locks.
 ============================================================ */
-const VIDEO_A = "https://d8j0ntlcm91z4.cloudfront.net/user_39Qm9RIiWlW327BCfS0sc0QcpGU/hf_20260702_174511_78d5fece-23cc-4c4a-a834-46810a95d6fe.mp4";
-const VIDEO_B = "https://d8j0ntlcm91z4.cloudfront.net/user_39Qm9RIiWlW327BCfS0sc0QcpGU/hf_20260702_174522_be884027-c805-41a5-b51d-f3a17718f574.mp4";
+const VIDEO_A = "video/film1.mp4"; /* свайп 1: подъезд к багажнику */
+const VIDEO_B = "video/film2.mp4"; /* свайп 2: багажник открывается */
 
 const hero = document.getElementById('hero');
 const vidA = document.getElementById('vidA');
@@ -880,7 +926,7 @@ if (VIDEO_A && VIDEO_B && !reduced){
   vidB.src = VIDEO_B;
   vidA.addEventListener('canplay', ()=>{ aOK = true; }, {once:true});
   vidB.addEventListener('canplay', ()=>{ bOK = true; }, {once:true});
-  vidA.addEventListener('error', ()=>{ aOK = false; finishAll(); }, {once:true});
+  vidA.addEventListener('error', ()=>{ aOK = false; failOpen(); }, {once:true});
   vidB.addEventListener('error', ()=>{ bOK = false; }, {once:true});
   /* iOS/Android: первое касание «разблокирует» оба видео,
      дальше play() из кода работает без ограничений */
@@ -908,18 +954,18 @@ function startFilm1(){
     scrollTo({top:0});
     let started = false;
     const go = ()=>{ if (started || phase!=='film1') return; started = true;
-      vidA.play().catch(()=>finishAll());
+      vidA.play().catch(()=>failOpen());
       setTimeout(()=>{ if(phase==='film1') toAwait(); }, ((vidA.duration||8)+3)*1000);
     };
     vidA.addEventListener('canplay', go, {once:true});
-    setTimeout(()=>{ if(!started && phase==='film1') finishAll(); }, 7000);
+    setTimeout(()=>{ if(!started && phase==='film1') failOpen(); }, 7000);
     return;
   }
   phase = 'film1';
   hero.classList.add('playing');
   lock();
   scrollTo({top:0});
-  vidA.play().catch(()=>finishAll());
+  vidA.play().catch(()=>failOpen());
   setTimeout(()=>{ if(phase==='film1') toAwait(); }, ((vidA.duration||8)+3)*1000);
 }
 function toAwait(){
@@ -944,6 +990,14 @@ function startFilm2(){
   vidA.style.opacity = 0;
   vidB.play().catch(()=>finishAll());
   setTimeout(()=>{ if(phase==='film2') finishAll(); }, ((vidB.duration||6)+3)*1000);
+}
+/* видео недоступно/не загрузилось: открываем сайт, оставляем постер и заголовки */
+function failOpen(){
+  if (phase==='done') return;
+  phase = 'done';
+  hero.classList.remove('playing','stage2');
+  unlock();
+  hint.style.display = 'none';
 }
 function finishAll(){
   if (phase==='done') return;
