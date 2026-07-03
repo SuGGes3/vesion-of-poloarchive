@@ -68,10 +68,12 @@ nav.scrolled{
 
 /* ============ MOBILE TUNING ============ */
 @media(max-width:640px){
-  nav{padding:12px 14px}
-  .logo{font-size:13px}
-  .cart-btn{padding:6px 10px;font-size:9px;gap:5px}
-  .cart-btn b{min-width:15px;height:15px;font-size:9px}
+  nav{padding:10px 12px}
+  .logo{font-size:12px;letter-spacing:.04em}
+  .nav-links{gap:8px;font-size:8px;letter-spacing:.1em}
+  .cart-word{display:none}
+  .cart-btn{padding:6px 8px;font-size:9px;gap:4px}
+  .cart-btn b{min-width:14px;height:14px;font-size:8px}
   .hero-meta{font-size:8px;letter-spacing:.14em;line-height:1.6}
   .hero-meta.tl{top:54px;left:14px}
   .hero-meta.tr{top:54px;right:14px}
@@ -497,7 +499,10 @@ footer .logo{font-size:22px;margin-bottom:14px;display:block}
     <a href="#catalog">Shop</a>
     <a href="#about">About</a>
     <a href="#contact">Contact</a>
-    <button class="cart-btn" id="cartBtn">Cart <b id="cartCount">0</b></button>
+    <button class="cart-btn" id="cartBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><circle cx="9" cy="21" r="1.5"/><circle cx="19" cy="21" r="1.5"/><path d="M2 3h3l2.6 12.5a2 2 0 0 0 2 1.5h8.7a2 2 0 0 0 2-1.6L22 7H6"/></svg>
+      <span class="cart-word">Cart</span> <b id="cartCount">0</b>
+    </button>
   </div>
 </nav>
 
